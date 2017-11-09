@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Intro to D3</title>
+  		<script type="text/javascript" src="./d3/d3.min.js"></script>
+	</head>
+
+
+	<body>
+		<script type="text/javascript">
+			var dataset;
+
+			d3.json("data.json", function(error, data) {
+    			if (error) {console.log(error);}
+
+    			data.forEach(function(d) {
+    				d.Number = +d.Number; 
+    				d.ID = +d.ID;
+    			})
+
+    			dataset = data;
+
+    			dataset.sort(function(x, y) {
+    				return d3.ascending(x.Number, y.Number);
+    			})
+
+
+			
+			});
+
+			
+
+		</script>
+	</body>
+</html>
