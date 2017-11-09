@@ -28,7 +28,7 @@
 		<script type="text/javascript">
 			var svg_w = 960;
 			var svg_h = 700;
-			var margin = {top: 100, right: 75, bottom: 120, left: 50};
+			var margin = {top: 100, right: 75, bottom: 180, left: 50};
 			var width = svg_w - margin.left - margin.right;
 			var height = svg_h - margin.top - margin.bottom;
 
@@ -55,7 +55,7 @@
 					    .attr("height", svg_h)
 					    
 		    var g = svg.append("g")
-				    	.attr("transform", "translate("+ margin.left + "," + margin.top*2 + ")");
+				    	.attr("transform", "translate("+ margin.left + "," + margin.top*2.3 + ")");
 
 
     		var yScale = d3.scaleLinear()
@@ -69,7 +69,12 @@
 							.padding(0.1);
 
 			g.append("g")
-				.call(d3.axisTop(xScale));
+				.call(d3.axisTop(xScale))
+				.selectAll("text")
+		        .attr("y", -8)
+		        .attr("x", 3)
+		        .attr("transform", "rotate(-25)")
+		        .style("text-anchor", "start");
 
 			g.append("g")
 				.call(d3.axisLeft(yScale));
