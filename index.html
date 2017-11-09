@@ -4,13 +4,6 @@
 		<meta charset="UTF-8">
 		<title>Intro to D3</title>
   		<script type="text/javascript" src="./d3/d3.min.js"></script>
-  		<style>
-  			.Brooklyn {fill: #fae3e3;}
-		    .Queens {fill: #f7d4bc;}
-		    .StatenIsland {fill: #cfa5b4;}
-		    .Manhattan {fill: #c98bb9;}
-		    .Bronx {fill: #846b8a;}
-  		</style>
 	</head>
 
 
@@ -28,7 +21,7 @@
 		<script type="text/javascript">
 			var svg_w = 960;
 			var svg_h = 700;
-			var margin = {top: 100, right: 75, bottom: 180, left: 50};
+			var margin = {top: 90, right: 15, bottom: 180, left: 110};
 			var width = svg_w - margin.left - margin.right;
 			var height = svg_h - margin.top - margin.bottom;
 
@@ -49,6 +42,7 @@
     			})
 
 
+    		//create svg, svg g element
 			var svg = d3.select("#chart")
 					    .append("svg")
 					    .attr("width", svg_w)
@@ -57,7 +51,7 @@
 		    var g = svg.append("g")
 				    	.attr("transform", "translate("+ margin.left + "," + margin.top*2.3 + ")");
 
-
+			//setup x, y, color scale
     		var yScale = d3.scaleLinear()
 							.domain(d3.extent(dataset, function(d) { return d.Number;}))
 							.range([0,height])
@@ -65,37 +59,61 @@
 
 			var xScale = d3.scaleBand()
 							.domain(dataset.map(function (d) {return d.Geography;}))
-							.range([0, width])
-							.padding(0.1);
+							.rangeRound([0, width]);
+							
 
+			var colorScale = d3.scaleOrdinal()
+						        .domain(dataset, function(d) {return d.Borough})
+						        .range(['#fae3e3', '#f7d4bc', '#cfa5b4', '#c98bb9', '#846b8a']);
+
+			//add x axis			        	
 			g.append("g")
 				.call(d3.axisTop(xScale))
 				.selectAll("text")
-		        .attr("y", -8)
-		        .attr("x", 3)
+				.attr("y", -10)
+		        .attr("x", -15)
 		        .attr("transform", "rotate(-25)")
 		        .style("text-anchor", "start");
 
+		    //add y axis
 			g.append("g")
 				.call(d3.axisLeft(yScale));
 
+			//create bars
+			var barwidth = width / (dataset.length + 1);
 	    	g.selectAll(".bar")
 		        .data(dataset) 
 		        .enter()
 		        .append("rect") 
-		        .attr("x", function(d){ return xScale(d.Geography); })
-		        .attr("y", 0)
-		        .attr("width", xScale.bandwidth())
+		        .attr("x", function(d, i){ return i * Math.round(barwidth) + 0.8 })
+		        .attr("y", 1)
+		        .attr("width", barwidth - 1.6)
 		        .attr("height", function(d){ return yScale(d.Number) })
-		        .attr("class", function(d) {
-			          var c
-			          if (d.Borough == 'Brooklyn') {c = 'Brooklyn'}
-			          else if (d.Borough == 'Queens') {c = 'Queens'}
-			          else if (d.Borough == 'Staten Island') {c = 'StatenIsland'}
-			          else if (d.Borough == 'Manhattan') {c = 'Manhattan'}
-			          else {c = 'Bronx'}
-			          return c
-			        });
+		        .attr("fill", function(d) { return colorScale(d.Borough); });
+
+	        //add text lable for x axis
+	        g.append("text")             
+				.attr("transform", "translate("+ width/2 + "," + (-margin.top) + ")")
+				.style("text-anchor", "middle")
+				.text("Community District")
+				.attr("dy", "2em")
+				.attr("dx", "2em")
+       			.style("font-size", 12)
+				.attr("class", "axisLabel");
+
+			//add text lable for y axis
+			g.append('text')
+				.attr("transform", "translate(" + (-margin.left/2) + " ," + (height) + ")" + "rotate(-90)")
+	            .attr("text-anchor", "right")
+	            .text("Number of Adults with Asthma (rounded to the nearest 1,000)")	            
+				.attr("dx", "3em")
+	            .style("font-size", 12)
+	            .attr('class', 'axisLabel');
+	           
+	            
+
+
+		  
 
 			});
 
