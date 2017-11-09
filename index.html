@@ -19,14 +19,14 @@
 
 
 		<script type="text/javascript">
-			var width = 960;
-			var height = 700;
-			var margin = {top: 30, right: 30, bottom: 300, left: 40};
-			var svg_w = width - margin.left - margin.right;
-			var svg_h = height - margin.top - margin.bottom;
+			var svg_w = 960;
+			var svg_h = 700;
+			var margin = {top: 100, right: 75, bottom: 120, left: 50};
+			var width = svg_w - margin.left - margin.right;
+			var height = svg_h - margin.top - margin.bottom;
 
+			//load, manipulate and sort dataset
 			var dataset;
-
 			d3.json("data.json", function(error, data) {
     			if (error) {console.log(error);}
 
@@ -41,27 +41,34 @@
     				return d3.ascending(x.Number, y.Number);
     			})
 
+
 			var svg = d3.select("#chart")
 					    .append("svg")
 					    .attr("width", svg_w)
 					    .attr("height", svg_h)
 					    
 		    var g = svg.append("g")
-				    	.attr("transform", "translate("+ margin.left + "," + margin.top + ")");
-
-	    	var barWidth = width / (dataset.length + 1);
-
-	    	g.selectAll(".bar")
-		        .data(dataset) 
-		        .enter()
-		        .append("rect") 
-		        .attr("width", barWidth)
-		        .attr("x", function(d, i){ return i*(barWidth+1); })
-		        .attr("height", function(d){ return d.Number / 100; })
-		        .attr("fill", "teal");
+				    	.attr("transform", "translate("+ margin.left + "," + margin.top*2 + ")");
 
 
-			
+    		var yScale = d3.scaleLinear()
+							.domain(d3.extent(dataset, function(d) { return d.Number;}))
+							.range([0,height])
+							.nice();
+
+			var xScale = d3.scaleBand()
+							.domain(dataset.map(function (d) {return d.Geography;}))
+							.range([0, width])
+							.padding(0.1);
+
+			g.append("g")
+				.call(d3.axisTop(xScale));
+
+			g.append("g")
+				.call(d3.axisLeft(yScale));	
+
+
+	    	
 			});
 
 			
