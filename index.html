@@ -68,7 +68,16 @@
 				.call(d3.axisLeft(yScale));	
 
 
-	    	
+	    	g.selectAll(".bar")
+		        .data(dataset) 
+		        .enter()
+		        .append("rect") 
+		        .attr("x", function(d){ return xScale(d.Geography); })
+		        .attr("y", 0)
+		        .attr("width", xScale.bandwidth())
+		        .attr("height", function(d){ return yScale(d.Number) })
+		        .attr("fill", "teal");
+
 			});
 
 			
