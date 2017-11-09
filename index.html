@@ -4,6 +4,13 @@
 		<meta charset="UTF-8">
 		<title>Intro to D3</title>
   		<script type="text/javascript" src="./d3/d3.min.js"></script>
+  		<style>
+  			.Brooklyn {fill: #fae3e3;}
+		    .Queens {fill: #f7d4bc;}
+		    .StatenIsland {fill: #cfa5b4;}
+		    .Manhattan {fill: #c98bb9;}
+		    .Bronx {fill: #846b8a;}
+  		</style>
 	</head>
 
 
@@ -65,8 +72,7 @@
 				.call(d3.axisTop(xScale));
 
 			g.append("g")
-				.call(d3.axisLeft(yScale));	
-
+				.call(d3.axisLeft(yScale));
 
 	    	g.selectAll(".bar")
 		        .data(dataset) 
@@ -76,7 +82,15 @@
 		        .attr("y", 0)
 		        .attr("width", xScale.bandwidth())
 		        .attr("height", function(d){ return yScale(d.Number) })
-		        .attr("fill", "teal");
+		        .attr("class", function(d) {
+			          var c
+			          if (d.Borough == 'Brooklyn') {c = 'Brooklyn'}
+			          else if (d.Borough == 'Queens') {c = 'Queens'}
+			          else if (d.Borough == 'Staten Island') {c = 'StatenIsland'}
+			          else if (d.Borough == 'Manhattan') {c = 'Manhattan'}
+			          else {c = 'Bronx'}
+			          return c
+			        });
 
 			});
 
