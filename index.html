@@ -110,7 +110,32 @@
 	            .style("font-size", 12)
 	            .attr('class', 'axisLabel');
 	           
-	            
+			//add legend
+			//reference: http://zeroviscosity.com/d3-js-step-by-step/step-3-adding-a-legend
+			var legend = g.append('g')			  		
+						    .selectAll('.legend')
+						    .data(['Bronx', 'Queens', 'Brooklyn', 'Manhattan', 'Staten Island'])
+						    .enter()
+						    .append('g')
+						    .attr('class', 'legend')
+						    .attr("transform", function(d, i) { 
+						    	return "translate(" + (margin.left-90) + ',' + (height-margin.bottom/2.3+i*16) + ")"; 
+						    		})
+						    .attr('font-size', 12);
+
+			legend.append("rect")
+					.attr("fill", colorScale)
+				    .attr("width", 15)
+				    .attr("height", 15)
+				    .attr('rx', 2)
+	                .attr('ry', 2);
+				    
+
+			legend.append("text")
+					.text(function(d) { return d; })
+				    .attr("x", 18)
+				    .attr("y", 15/2)
+				    .attr("dy", "0.4em");	            
 
 
 		  
